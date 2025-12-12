@@ -1,15 +1,46 @@
-import React, { useEffect } from 'react';
-import { View, Text, Pressable, Animated, Switch } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme, useColorSchemeStore } from '../lib/useColorScheme';
+import React, { useEffect } from 'react'
+import {
+  View,
+  Text,
+  Pressable,
+  Animated,
+  Switch,
+  StyleSheet,
+} from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import { useColorScheme, useColorSchemeStore } from '../lib/useColorScheme'
 
-export function AnimatedThemeToggle({ className }: { className?: string }) {
-  const colorScheme = useColorScheme();
-  const { setColorScheme } = useColorSchemeStore();
-  const isDarkMode = colorScheme === 'dark';
-  
-  const rotateAnim = React.useRef(new Animated.Value(isDarkMode ? 1 : 0)).current;
-  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+const colors = {
+  light: {
+    card: '#FFFFFF',
+    border: '#E4E4E7',
+    foreground: '#09090B',
+    muted: '#F4F4F5',
+    mutedForeground: '#71717A',
+    primary: '#18181B',
+    primaryForeground: '#FAFAFA',
+  },
+  dark: {
+    card: '#09090B',
+    border: '#27272A',
+    foreground: '#FAFAFA',
+    muted: '#27272A',
+    mutedForeground: '#A1A1AA',
+    primary: '#FAFAFA',
+    primaryForeground: '#18181B',
+  },
+}
+
+export function AnimatedThemeToggle({ style }: { style?: object }) {
+  const colorScheme = useColorScheme()
+  const { setColorScheme } = useColorSchemeStore()
+  const isDarkMode = colorScheme === 'dark'
+  const theme = isDarkMode ? colors.dark : colors.light
+
+  const rotateAnim = React.useRef(
+    new Animated.Value(isDarkMode ? 1 : 0)
+  ).current
+  const scaleAnim = React.useRef(new Animated.Value(1)).current
 
   useEffect(() => {
     Animated.spring(rotateAnim, {
@@ -17,8 +48,8 @@ export function AnimatedThemeToggle({ className }: { className?: string }) {
       useNativeDriver: true,
       friction: 8,
       tension: 40,
-    }).start();
-  }, [isDarkMode, rotateAnim]);
+    }).start()
+  }, [isDarkMode, rotateAnim])
 
   const toggleTheme = () => {
     Animated.sequence([
@@ -32,20 +63,28 @@ export function AnimatedThemeToggle({ className }: { className?: string }) {
         duration: 100,
         useNativeDriver: true,
       }),
-    ]).start();
+    ]).start()
 
-    setColorScheme(isDarkMode ? 'light' : 'dark');
-  };
+    setColorScheme(isDarkMode ? 'light' : 'dark')
+  }
 
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '180deg'],
-  });
+  })
 
   return (
     <Pressable
       onPress={toggleTheme}
-      className={`p-3 rounded-full bg-card border border-border shadow-sm active:opacity-80 ${className || ''}`}
+      style={({ pressed }) => [
+        styles.animatedToggleButton,
+        {
+          backgroundColor: theme.card,
+          borderColor: theme.border,
+          opacity: pressed ? 0.8 : 1,
+        },
+        style,
+      ]}
     >
       <Animated.View
         style={{
@@ -53,74 +92,94 @@ export function AnimatedThemeToggle({ className }: { className?: string }) {
         }}
       >
         {isDarkMode ? (
-          <Ionicons name="sunny" size={24} className="text-foreground" color="#FDB813" />
+          <Ionicons name="sunny" size={24} color="#FDB813" />
         ) : (
-          <Ionicons name="moon" size={24} className="text-foreground" color="#4A5568" />
+          <Ionicons name="moon" size={24} color="#4A5568" />
         )}
       </Animated.View>
     </Pressable>
-  );
+  )
 }
 
-// Full theme toggle with all three options (Light, Dark, System)
 export function ThemeToggle() {
-  const { colorScheme: storedScheme, setColorScheme } = useColorSchemeStore();
+  const colorScheme = useColorScheme()
+  const { colorScheme: storedScheme, setColorScheme } = useColorSchemeStore()
+  const isDarkMode = colorScheme === 'dark'
+  const theme = isDarkMode ? colors.dark : colors.light
 
-  const options: { 
-    value: 'light' | 'dark' | 'system'; 
-    label: string; 
-    icon: keyof typeof Ionicons.glyphMap;
+  const options: {
+    value: 'light' | 'dark' | 'system'
+    label: string
+    icon: keyof typeof Ionicons.glyphMap
   }[] = [
     { value: 'light', label: 'Light', icon: 'sunny' },
     { value: 'dark', label: 'Dark', icon: 'moon' },
     { value: 'system', label: 'System', icon: 'phone-portrait-outline' },
-  ];
+  ]
 
   return (
-    <View className="flex-row gap-2 p-2 bg-card rounded-xl border border-border shadow-sm">
+    <View
+      style={[
+        styles.themeToggleContainer,
+        {
+          backgroundColor: theme.card,
+          borderColor: theme.border,
+        },
+      ]}
+    >
       {options.map((option) => {
-        const isSelected = storedScheme === option.value;
-        
+        const isSelected = storedScheme === option.value
+
         return (
           <Pressable
             key={option.value}
             onPress={() => setColorScheme(option.value)}
-            className={`flex-1 px-4 py-3 rounded-lg items-center ${
-              isSelected
-                ? 'bg-primary'
-                : 'bg-muted/50'
-            }`}
+            style={[
+              styles.themeToggleOption,
+              {
+                backgroundColor: isSelected
+                  ? theme.primary
+                  : isDarkMode
+                  ? 'rgba(39, 39, 42, 0.5)'
+                  : 'rgba(244, 244, 245, 0.5)',
+              },
+            ]}
           >
-            <Ionicons 
-              name={option.icon} 
-              size={20} 
-              color={isSelected ? '#FFFFFF' : '#71717A'}
-              style={{ marginBottom: 4 }}
+            <Ionicons
+              name={option.icon}
+              size={20}
+              color={isSelected ? theme.primaryForeground : '#71717A'}
+              style={styles.themeToggleIcon}
             />
             <Text
-              className={`text-sm font-medium ${
-                isSelected
-                  ? 'text-primary-foreground'
-                  : 'text-muted-foreground'
-              }`}
+              style={[
+                styles.themeToggleLabel,
+                {
+                  color: isSelected
+                    ? theme.primaryForeground
+                    : theme.mutedForeground,
+                },
+              ]}
             >
               {option.label}
             </Text>
           </Pressable>
-        );
+        )
       })}
     </View>
-  );
+  )
 }
 
-// Compact toggle button with icon only
 export function ThemeToggleButton({ size = 24 }: { size?: number }) {
-  const colorScheme = useColorScheme();
-  const { setColorScheme } = useColorSchemeStore();
-  const isDarkMode = colorScheme === 'dark';
-  
-  const rotateAnim = React.useRef(new Animated.Value(isDarkMode ? 1 : 0)).current;
-  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+  const colorScheme = useColorScheme()
+  const { setColorScheme } = useColorSchemeStore()
+  const isDarkMode = colorScheme === 'dark'
+  const theme = isDarkMode ? colors.dark : colors.light
+
+  const rotateAnim = React.useRef(
+    new Animated.Value(isDarkMode ? 1 : 0)
+  ).current
+  const scaleAnim = React.useRef(new Animated.Value(1)).current
 
   useEffect(() => {
     Animated.spring(rotateAnim, {
@@ -128,8 +187,8 @@ export function ThemeToggleButton({ size = 24 }: { size?: number }) {
       useNativeDriver: true,
       friction: 8,
       tension: 40,
-    }).start();
-  }, [isDarkMode, rotateAnim]);
+    }).start()
+  }, [isDarkMode, rotateAnim])
 
   const toggleTheme = () => {
     Animated.sequence([
@@ -143,57 +202,79 @@ export function ThemeToggleButton({ size = 24 }: { size?: number }) {
         duration: 100,
         useNativeDriver: true,
       }),
-    ]).start();
+    ]).start()
 
-    setColorScheme(isDarkMode ? 'light' : 'dark');
-  };
+    setColorScheme(isDarkMode ? 'light' : 'dark')
+  }
 
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '180deg'],
-  });
+  })
 
-  const iconColor = isDarkMode ? '#FDB813' : '#4A5568';
+  const iconColor = isDarkMode ? '#FDB813' : '#4A5568'
 
   return (
     <Pressable
       onPress={toggleTheme}
-      className="p-3 rounded-full bg-card border border-border shadow-sm active:opacity-80"
+      style={({ pressed }) => [
+        styles.toggleButton,
+        {
+          backgroundColor: theme.card,
+          borderColor: theme.border,
+          opacity: pressed ? 0.8 : 1,
+        },
+      ]}
     >
       <Animated.View
         style={{
           transform: [{ rotate: rotation }, { scale: scaleAnim }],
         }}
       >
-        <Ionicons 
-          name={isDarkMode ? 'sunny' : 'moon'} 
-          size={size} 
+        <Ionicons
+          name={isDarkMode ? 'sunny' : 'moon'}
+          size={size}
           color={iconColor}
         />
       </Animated.View>
     </Pressable>
-  );
+  )
 }
 
-// Switch toggle for light/dark mode
 export function ThemeSwitchToggle() {
-  const colorScheme = useColorScheme();
-  const { setColorScheme } = useColorSchemeStore();
-  const isDarkMode = colorScheme === 'dark';
+  const colorScheme = useColorScheme()
+  const { setColorScheme } = useColorSchemeStore()
+  const isDarkMode = colorScheme === 'dark'
+  const theme = isDarkMode ? colors.dark : colors.light
 
   const toggleTheme = (value: boolean) => {
-    setColorScheme(value ? 'dark' : 'light');
-  };
+    setColorScheme(value ? 'dark' : 'light')
+  }
 
   return (
-    <View className="flex-row items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm">
-      <View className="flex-row items-center gap-3">
-        <Ionicons 
-          name={isDarkMode ? 'moon' : 'sunny'} 
-          size={24} 
+    <View
+      style={[
+        styles.switchToggleContainer,
+        {
+          backgroundColor: theme.card,
+          borderColor: theme.border,
+        },
+      ]}
+    >
+      <View style={styles.switchToggleContent}>
+        <Ionicons
+          name={isDarkMode ? 'moon' : 'sunny'}
+          size={24}
           color={isDarkMode ? '#FDB813' : '#4A5568'}
         />
-        <Text className="text-base font-medium text-foreground">
+        <Text
+          style={[
+            styles.switchToggleLabel,
+            {
+              color: theme.foreground,
+            },
+          ]}
+        >
           {isDarkMode ? 'Dark Mode' : 'Light Mode'}
         </Text>
       </View>
@@ -205,5 +286,88 @@ export function ThemeSwitchToggle() {
         ios_backgroundColor="#D1D5DB"
       />
     </View>
-  );
+  )
 }
+
+const styles = StyleSheet.create({
+  animatedToggleButton: {
+    padding: 12,
+    borderRadius: 9999,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  themeToggleContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    padding: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  themeToggleOption: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  themeToggleIcon: {
+    marginBottom: 4,
+  },
+  themeToggleLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  toggleButton: {
+    padding: 12,
+    borderRadius: 9999,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  switchToggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  switchToggleContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  switchToggleLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+})
