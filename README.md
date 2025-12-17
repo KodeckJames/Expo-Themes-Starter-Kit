@@ -2,7 +2,7 @@
 
 <div align="center">
   <video 
-    src="https://github.com/user-attachments/assets/330a8642-063c-4c68-832b-0862a33e31e3" 
+    src="https://github.com/user-attachments/assets/212b906f-5cf4-473b-a540-52f94e645081" 
     width="300" 
     controls 
     autoplay 
