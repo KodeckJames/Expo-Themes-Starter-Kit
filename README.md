@@ -1,7 +1,7 @@
 # Welcome to your Expo Themes Starter Kit (Standard) 🎨
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/330a8642-063c-4c68-832b-0862a33e31e3" width="300" controls autoplay loop muted/>
+  <video src="https://github.com/user-attachments/assets/330a8642-063c-4c68-832b-0862a33e31e3" width="300" controls autoplay loop muted></video>
 </div>
 
 > A useful Expo template to kickstart your Expo projects with pre-configured themes. Skip the boilerplate and start building immediately with a clean, organized architecture.
