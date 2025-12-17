@@ -1,20 +1,63 @@
-# Welcome to your Expo app 👋
+# Welcome to your Expo Themes Starter Kit (Standard) 🎨
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This template package is part of the [create-expo-themes](https://www.npmjs.com/package/create-expo-themes) CLI tool
 
-## Get started
+## How to get started with this template
 
-1. Install dependencies
+1. Initialize your project:
 
    ```bash
-   npm install
+   npx create-expo-themes@latest
    ```
 
-2. Start the app
+2. Select the first option: `Standard (StyleSheet API)`
+
+3. Start the app:
 
    ```bash
    npx expo start
    ```
+
+## Theme implementation logic
+
+The theme management is located in lib/useColorScheme.tsx and follows a modern, persistent state pattern:
+
+- Zustand Store: Acts as the single source of truth for the colorScheme state across the entire app. It handles three states: light, dark, or system.
+
+- Persistent Storage: Using @react-native-async-storage/async-storage, the user's preference is saved locally. This ensures that if a user manually selects "Dark Mode," the app remains in Dark Mode even after being fully closed and reopened.
+
+- Smart Hook (useColorScheme): * On app launch, it triggers loadColorScheme to hydrate the state from storage.
+
+   - If the state is set to system, it automatically falls back to the device's native color preference using React Native's built-in useColorScheme.
+
+   - If a specific preference is stored (light or dark), it overrides the system setting.
+
+## How to use the theme-toggle components in desired pages
+
+- The toggle components are located in `components/ThemeToggle.tsx`
+
+- You have 4 custom toggling components to choose from:
+
+```typescript
+// Simple animated button
+<AnimatedThemeToggle />
+
+// Full theme selector
+<ThemeToggle />
+
+// Custom size button
+<ThemeToggleButton size={28} />
+
+// Custom switch button from react native switch component
+<ThemeSwitchToggle/>
+```
+
+- You then simply import your desired component and use it, for example:
+
+```typescript
+import { AnimatedThemeToggle } from '@/components/ThemeToggle';
+```
+## Other core Expo configurations from the original Expo docs:
 
 In the output, you'll find options to open the app in a
 
@@ -25,15 +68,6 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
 ## Learn more
 
