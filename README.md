@@ -40,13 +40,13 @@ The theme management is located in lib/useColorScheme.tsx and follows a modern, 
 
 ```typescript
 // Simple animated button
-<AnimatedThemeToggle />
+<AnimatedThemeToggle/>
 
 // Full theme selector
-<ThemeToggle />
+<ThemeToggle/>
 
 // Custom size button
-<ThemeToggleButton size={28} />
+<ThemeToggleButton size={28}/>
 
 // Custom switch button from react native switch component
 <ThemeSwitchToggle/>
