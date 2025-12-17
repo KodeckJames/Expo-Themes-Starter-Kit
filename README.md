@@ -1,5 +1,7 @@
 # Welcome to your Expo Themes Starter Kit (Standard) 🎨
 
+> A useful Expo template to kickstart your Expo projects with pre-configured themes. Skip the boilerplate and start building immediately with a clean, organized architecture.
+
 This template package is part of the [create-expo-themes](https://www.npmjs.com/package/create-expo-themes) CLI tool
 
 ## How to get started with this template
