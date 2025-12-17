@@ -1,7 +1,15 @@
 # Welcome to your Expo Themes Starter Kit (Standard) 🎨
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/330a8642-063c-4c68-832b-0862a33e31e3" width="300" controls autoplay loop muted></video>
+  <video 
+    src="https://github.com/user-attachments/assets/330a8642-063c-4c68-832b-0862a33e31e3" 
+    width="300" 
+    controls 
+    autoplay 
+    loop 
+    muted 
+    playsinline
+  ></video>
 </div>
 
 > A useful Expo template to kickstart your Expo projects with pre-configured themes. Skip the boilerplate and start building immediately with a clean, organized architecture.
@@ -32,11 +40,11 @@ The theme management is located in lib/useColorScheme.tsx and follows a modern, 
 
 - Persistent Storage: Using @react-native-async-storage/async-storage, the user's preference is saved locally. This ensures that if a user manually selects "Dark Mode," the app remains in Dark Mode even after being fully closed and reopened.
 
-- Smart Hook (useColorScheme): * On app launch, it triggers loadColorScheme to hydrate the state from storage.
+- Smart Hook (useColorScheme): \* On app launch, it triggers loadColorScheme to hydrate the state from storage.
 
-   - If the state is set to system, it automatically falls back to the device's native color preference using React Native's built-in useColorScheme.
+  - If the state is set to system, it automatically falls back to the device's native color preference using React Native's built-in useColorScheme.
 
-   - If a specific preference is stored (light or dark), it overrides the system setting.
+  - If a specific preference is stored (light or dark), it overrides the system setting.
 
 ## How to use the theme-toggle components in desired pages
 
@@ -61,8 +69,9 @@ The theme management is located in lib/useColorScheme.tsx and follows a modern, 
 - You then simply import your desired component and use it, for example:
 
 ```typescript
-import { AnimatedThemeToggle } from '@/components/ThemeToggle';
+import { AnimatedThemeToggle } from '@/components/ThemeToggle'
 ```
+
 ## Other core Expo configurations from the original Expo docs:
 
 In the output, you'll find options to open the app in a
@@ -73,7 +82,6 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
 
 ## Learn more
 
